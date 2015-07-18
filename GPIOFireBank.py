@@ -72,7 +72,7 @@ class GPIOFireChannel:
             self.activated_at = 0
 
         if gpio_present:
-            GPIO.output(self.gpio_channel + self.channel_offset, self.cur_state)
+            GPIO.output(self.gpio_channel - 1 + self.channel_offset, self.cur_state)
 
         return self.cur_state
 
