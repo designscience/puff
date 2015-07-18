@@ -103,7 +103,7 @@ class GPIOFireBank:
         if gpio_present:
             GPIO.setmode(GPIO.BCM)  # GPIO.BCM for IO pins, GPIO.BOARD for connector pins
             GPIO.setwarnings(False)
-            for ch in range(0, self.num_channels):
+            for ch in range(0, num_channels):
                 GPIO.setup(ch + self.channel_offset, GPIO.OUT)
 
         self.num_channels = 0
