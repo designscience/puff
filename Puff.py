@@ -72,12 +72,15 @@ def main(argv):
                 mssg = cs.recv(bufsize)
             except error:
                 print "Lost connection to host process. Waiting for new connection..."
+                banks.kill()
                 break
             if not mssg:
                 print "Null data received. Stopping program."
+                banks.kill()
                 running = False
                 break
             else:
+                # TODO: testing only...
                 print "Message: {0}".format(mssg)
 
             # TODO: testing only. Replace with message processing
