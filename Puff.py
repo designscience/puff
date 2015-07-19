@@ -129,9 +129,8 @@ def main(argv):
                 running = False
                 break
             if not mssg:
-                print "Null data received. Stopping program."
+                print "Null data received."
                 fire_bank.kill()
-                running = False
                 break
             else:
                 # TODO: testing only, remove
