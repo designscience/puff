@@ -67,7 +67,7 @@ class GPIOFireChannel:
 
         # set or clear the activation time
         if self.cur_state > 0:
-            self.activated_at = time.time()
+            self.activated_at = time()
         else:
             self.activated_at = 0
 
@@ -82,7 +82,7 @@ class GPIOFireChannel:
         :return: state of this channel after this call
         """
         if self.activated_at > 0:
-            now = time.time()
+            now = time()
             if (now - self.activated_at) > self.max_on_time:
                 self.set_state(0)
         return self.cur_state

@@ -2,6 +2,7 @@
 
 from GPIOFireBank import GPIOFireChannel, GPIOFireBank
 from socket import *
+from time import sleep
 import sys, getopt
 
 __author__ = 'Stu D\'Alessandro'
@@ -38,6 +39,11 @@ def main(argv):
             print 'Using host port {0}'.format(port)
 
     banks = GPIOFireBank(18)
+
+    # TODO: testing only, remove!
+    banks.blow()
+    sleep(1)
+    banks.kill()
 
     # Open socket
     ss = socket(AF_INET, SOCK_STREAM)
