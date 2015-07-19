@@ -55,8 +55,8 @@ def execute(cmnd, ver, paramz, bank):
         terms = paramz.split(':')
         try:
             count = int(terms[0])
-            for i in range(0, count):
-                bank.set_channel_state(i + 1, terms[i + 1])
+            for i in range(1, count):
+                bank.set_channel_state(i, terms[i])
         except IndexError:
             print "Index out of range in execute()"
         # except:
