@@ -59,8 +59,8 @@ def execute(cmnd, ver, paramz, bank):
                 bank.set_channel_state(i + 1, terms[i + 1])
         except IndexError:
             print "Index out of range in execute()"
-        except:
-            print "Unknown exception"
+        # except:
+        #     print "Unknown exception"
 
 
 def main(argv):
