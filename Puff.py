@@ -111,7 +111,11 @@ def main(argv):
 
     # Open socket
     ss = socket(AF_INET, SOCK_STREAM)
-    ss.bind(addr)
+    try:
+        ss.bind(addr)
+    except error:
+        print "Unable to bind to socket. Closing."
+        running = False
     while running:
         ss.listen(1)
         print "Listening on host {0}, port {1}".format(local_addr, port)
