@@ -31,6 +31,7 @@ def parse_and_execute(data, bank):
             data = data[:m.end(0)]
             print "Command: {0}, params: {1}, data now {2}".format(command, params, data)
         else:
+            data = ""
             break
     print "Returning data: {0}".format(data)
     return data
