@@ -3,6 +3,9 @@
 from GPIOFireBank import GPIOFireChannel, GPIOFireBank
 from socket import *
 from time import sleep
+from NaggingMother import NaggingMother
+import threading
+from Queue import Queue
 import sys, getopt
 
 __author__ = 'Stu D\'Alessandro'
@@ -19,14 +22,15 @@ def main(argv):
     addr = (host, port)
     local_addr = gethostbyname(gethostname())
     running = True # keep running until this is set false
+    num_channels = 18
 
     test_toggle = False
 
     # process command line arguments
     try:
-        opts, args = getopt.getopt(argv, 'a:p:')
+        opts, args = getopt.getopt(argv, 'a:p:c:')
     except getopt.GetoptError:
-        print 'Usage puff -a 192.168.1.144 -p 4444'
+        print 'Usage puff -a 192.168.1.144 -p 4444 -c 24'
         sys.exit(2)
 
     for opt, arg in opts:
@@ -37,13 +41,23 @@ def main(argv):
         elif opt == '-p':
             port = int(arg)
             print 'Using host port {0}'.format(port)
+        elif opt == '-c':
+            num_channels = int(arg)
+            print 'Number of channels set to {0)'.format(num_channels)
 
-    banks = GPIOFireBank(18)
+    # Set up fire banks
+    banks = GPIOFireBank(num_channels)
 
     # TODO: testing only, remove!
     banks.blow()
     sleep(1)
     banks.kill()
+
+    # setup watchdog on fire bank
+    mom = NaggingMother()
+    call_your_mother = Queue(16)
+    watchdog = threading.Thread(target=mom, args=(banks, call_your_mother))
+    watchdog.start()
 
     # Open socket
     ss = socket(AF_INET, SOCK_STREAM)
@@ -73,10 +87,13 @@ def main(argv):
             else:
                 banks.kill()
             test_toggle = not test_toggle
-
         cs.close()
-
     ss.close()
+
+    # shut down the watchdog thread
+    call_your_mother.put('exit')
+    print "Shutting down..."
+    watchdog.join()
     return 0
 
 if __name__ == '__main__':

@@ -159,4 +159,4 @@ class GPIOFireBank:
         :return: nil
         """
         for channel in self.channels:
-            channel.assert_max_on_time()
+            channel.assert_max_time()
