@@ -16,6 +16,7 @@ def main(argv):
     port = 4444
     bufsize = 1024
     addr = (host, port)
+    local_addr = gethostbyname(gethostname())
 
     # process command line arguments
     try:
@@ -27,6 +28,7 @@ def main(argv):
     for opt, arg in opts:
         if opt == '-a':
             host = arg
+            local_addr = arg
             print 'Using host address {0}'.format(host)
         elif opt == '-p':
             port = int(arg)
@@ -39,7 +41,7 @@ def main(argv):
     ss.bind(addr)
     ss.listen(1)
     while True:
-        print "Listening on host {0}, port {1}".format(host, port)
+        print "Listening on host {0}, port {1}".format(local_addr, port)
         cs, addr = ss.accept() # blocking
         print 'Connected from client at addr'
         while True:
