@@ -73,7 +73,7 @@ def main(argv):
     local_addr = gethostbyname(gethostname())
     running = True # keep running until this is set false
     num_channels = 18
-    offset = 2  # channel_offset
+    channel_offset = 2  # channel_offset
     mssg = ""
 
     test_toggle = False
@@ -97,11 +97,11 @@ def main(argv):
             num_channels = int(arg)
             print 'Number of channels set to {0)'.format(num_channels)
         elif opt == '-o':
-            offset = int(arg)
-            print 'GPIO channel offset set to {0)'.format(offset)
+            channel_offset = int(arg)
+            print 'GPIO channel offset set to {0)'.format(channel_offset)
 
     # Set up fire banks
-    fire_bank = GPIOFireBank(num_channels, 3, offset)
+    fire_bank = GPIOFireBank(num_channels, 3, channel_offset)
 
     # setup watchdog on fire bank
     mom = NaggingMother()
