@@ -6,9 +6,34 @@ from time import sleep
 from NaggingMother import NaggingMother
 import threading
 from Queue import Queue
-import sys, getopt
+from re import search
+import sys
+import getopt
+import re
 
 __author__ = 'Stu D\'Alessandro'
+
+
+def parse_and_execute(data, bank):
+    """
+    Parses and executes commands from a data string
+    :param data: command data from stream - may include more than one command or partial commands
+    :param bank: GPIOFireBank object
+    :return: remainder of data string (partial command) or empty string
+    """
+    pattern = re.compile("\$(\D+):(\d+)\|([0-9:]+)#")
+    while True:
+        message = pattern.search(data)
+        if message is not None:
+            command = m.group(1)
+            version = m.group(2)
+            params = m.group(3)
+            data = data[:m.end(0)]
+            print "Command: {0}, params: {1}, data now {2}".format(command, params, data)
+        else:
+            break
+    print "Returning data: {0}".format(data)
+    return data
 
 
 def main(argv):
@@ -23,6 +48,7 @@ def main(argv):
     local_addr = gethostbyname(gethostname())
     running = True # keep running until this is set false
     num_channels = 18
+    mssg = ""
 
     test_toggle = False
 
@@ -46,17 +72,12 @@ def main(argv):
             print 'Number of channels set to {0)'.format(num_channels)
 
     # Set up fire banks
-    banks = GPIOFireBank(num_channels)
-
-    # TODO: testing only, remove!
-    banks.blow()
-    sleep(1)
-    banks.kill()
+    fire_bank = GPIOFireBank(num_channels)
 
     # setup watchdog on fire bank
     mom = NaggingMother()
     call_your_mother = Queue(16)
-    watchdog = threading.Thread(target=mom, args=(banks, call_your_mother))
+    watchdog = threading.Thread(target=mom, args=(fire_bank, call_your_mother))
     watchdog.start()
 
     # Open socket
@@ -72,30 +93,24 @@ def main(argv):
         print 'Connected from client at addr'
         while True:
             try:
-                mssg = cs.recv(bufsize)
+                mssg += cs.recv(bufsize)
             except error:
                 print "Lost connection to host process. Waiting for new connection..."
-                banks.kill()
+                fire_bank.kill()
                 break
             except (KeyboardInterrupt, SystemExit):
                 running = False
                 break
             if not mssg:
                 print "Null data received. Stopping program."
-                banks.kill()
+                fire_bank.kill()
                 running = False
                 break
             else:
-                # TODO: testing only...
+                # TODO: testing only, remove
                 print "Message: {0}".format(mssg)
+                mssg = parse_and_execute(mssg, fire_bank)
 
-            # TODO: testing only. Replace with message processing
-            cs.send(mssg)
-            if test_toggle:
-                banks.blow()
-            else:
-                banks.kill()
-            test_toggle = not test_toggle
         cs.close()
     ss.close()
 
