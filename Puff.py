@@ -131,8 +131,7 @@ def main(argv):
                 fire_bank.kill()
                 break
             else:
-                # TODO: testing only, remove
-                print "Message: {0}".format(mssg)
+                # print "Message: {0}".format(mssg)
                 mssg = parse_and_execute(mssg, fire_bank)
 
         cs.close()
