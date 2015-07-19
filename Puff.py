@@ -19,6 +19,8 @@ def main(argv):
     local_addr = gethostbyname(gethostname())
     running = True # keep running until this is set false
 
+    test_toggle = False
+
     # process command line arguments
     try:
         opts, args = getopt.getopt(argv, 'a:p:')
@@ -60,6 +62,11 @@ def main(argv):
 
             # TODO: testing only. Replace with message processing
             cs.send(mssg)
+            if test_toggle:
+                banks.blow()
+            else:
+                banks.kill()
+            test_toggle = not test_toggle
 
         cs.close()
 

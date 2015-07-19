@@ -135,6 +135,14 @@ class GPIOFireBank:
         for channel in self.channels:
             channel.set_state(0)
 
+    def blow(self):
+        """
+        Turn all channels on (max on time applies)
+        :return: nil
+        """
+        for channel in self.channels:
+            channel.set_state(1)
+
     def set_max_on_time(self, new_max_time):
         """
         Updates the max time that channels will remain on
