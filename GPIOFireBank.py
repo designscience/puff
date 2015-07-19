@@ -63,7 +63,7 @@ class GPIOFireChannel:
         :param new_state: 0 or 1
         :return: current state
         """
-        self.cur_state = new_state
+        self.cur_state = 1 if new_state > 0 else 0
 
         # set or clear the activation time
         if self.cur_state > 0:
