@@ -36,7 +36,7 @@ def parse_and_execute(data, bank):
                 break
     except KeyboardInterrupt:
         raise
-    print "Returning data: {9}".format(data)
+    print "Returning data: {0}".format(data)
     return data
 
 
