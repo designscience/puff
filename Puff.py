@@ -29,9 +29,8 @@ def parse_and_execute(data, bank):
                 command = message.group(1)
                 version = message.group(2)
                 params = message.group(3)
-                data = data[:message.end(0)]
+                data = data[message.end(0):]
                 print "Message end: {0} Command: {1}, params: {2}, data now {3}".format(message.end(0), command, params, data)
-                data = ""
             else:
                 data = ""
                 break
