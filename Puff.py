@@ -65,7 +65,10 @@ def main(argv):
     while running:
         ss.listen(1)
         print "Listening on host {0}, port {1}".format(local_addr, port)
-        cs, addr = ss.accept() # blocking
+        try:
+            cs, addr = ss.accept()  # blocking
+        except (KeyboardInterrupt, SystemExit):
+            break
         print 'Connected from client at addr'
         while True:
             try:
@@ -73,6 +76,9 @@ def main(argv):
             except error:
                 print "Lost connection to host process. Waiting for new connection..."
                 banks.kill()
+                break
+            except (KeyboardInterrupt, SystemExit):
+                running = False
                 break
             if not mssg:
                 print "Null data received. Stopping program."
