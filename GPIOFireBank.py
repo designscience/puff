@@ -40,7 +40,7 @@ class GPIOFireChannel:
 
     def set_gpio_channel(self, channel_num):
         """
-        Sets teh GPIO channel number to be managed by this object
+        Sets the GPIO channel number to be managed by this object
         :param channel_num: GPIO channel number, 1-based
         :return: channel number
         """
@@ -91,13 +91,13 @@ class GPIOFireChannel:
 class GPIOFireBank:
     """ Manages turning multiple rPI GPIO channels on and off.
     This class also enforces a maximum on-time for all channels """
-    def __init__(self, num_channels=24, max_on_time=3):
+    def __init__(self, num_channels=24, max_on_time=3, channel_offset=2):
         """
         :param num_channels: total number of channels to manage
         :param max_on_time: The maximum time that any channel may be on for
         :return: nil
         """
-        self.channel_offset = 2  # Added to channel number to map to first used GPIO channel
+        self.channel_offset = channel_offset  # Added to channel number to map to first used GPIO channel
 
         # Configure GPIO interface
         if gpio_present:

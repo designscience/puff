@@ -73,13 +73,14 @@ def main(argv):
     local_addr = gethostbyname(gethostname())
     running = True # keep running until this is set false
     num_channels = 18
+    offset = 2  # channel_offset
     mssg = ""
 
     test_toggle = False
 
     # process command line arguments
     try:
-        opts, args = getopt.getopt(argv, 'a:p:c:')
+        opts, args = getopt.getopt(argv, 'a:p:c:o:')
     except getopt.GetoptError:
         print 'Usage puff -a 192.168.1.144 -p 4444 -c 24'
         sys.exit(2)
@@ -95,9 +96,12 @@ def main(argv):
         elif opt == '-c':
             num_channels = int(arg)
             print 'Number of channels set to {0)'.format(num_channels)
+        elif opt == '-o':
+            offset = int(arg)
+            print 'GPIO channel offset set to {0)'.format(offset)
 
     # Set up fire banks
-    fire_bank = GPIOFireBank(num_channels)
+    fire_bank = GPIOFireBank(num_channels, 3, offset)
 
     # setup watchdog on fire bank
     mom = NaggingMother()
