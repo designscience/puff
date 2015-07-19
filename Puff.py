@@ -95,7 +95,7 @@ def main(argv):
             print 'Using host port {0}'.format(port)
         elif opt == '-c':
             num_channels = int(arg)
-            print 'Number of channels set to {0)'.format(num_channels)
+            print 'Number of channels set to {0}'.format(num_channels)
         elif opt == '-o':
             channel_offset = int(arg)
             print 'GPIO channel offset set to {0}'.format(channel_offset)
