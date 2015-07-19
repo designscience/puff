@@ -25,9 +25,9 @@ def parse_and_execute(data, bank):
     while True:
         message = pattern.search(data)
         if message is not None:
-            command = m.group(1)
-            version = m.group(2)
-            params = m.group(3)
+            command = message.group(1)
+            version = message.group(2)
+            params = message.group(3)
             data = data[:m.end(0)]
             print "Command: {0}, params: {1}, data now {2}".format(command, params, data)
         else:
