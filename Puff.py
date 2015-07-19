@@ -22,18 +22,22 @@ def parse_and_execute(data, bank):
     :return: remainder of data string (partial command) or empty string
     """
     pattern = re.compile("\$(\D+):(\d+)\|([0-9:]+)#")
-    while True:
-        message = pattern.search(data)
-        if message is not None:
-            command = message.group(1)
-            version = message.group(2)
-            params = message.group(3)
-            data = data[:message.end(0)]
-            print "Command: {0}, params: {1}, data now {2}".format(command, params, data)
-        else:
-            data = ""
-            break
-    print "Returning data: {0}".format(data)
+    try:
+        while True:
+            message = pattern.search(data)
+            if message is not None:
+                command = message.group(1)
+                version = message.group(2)
+                params = message.group(3)
+                data = data[:message.end(0)]
+                print "Message end: {0} Command: {1}, params: {2}, data now {3}".format(message.end(0), command, params, data)
+                data = ""
+            else:
+                data = ""
+                break
+    except KeyboardInterrupt:
+        raise
+    print "Returning data: {9}".format(data)
     return data
 
 
