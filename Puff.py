@@ -98,7 +98,7 @@ def main(argv):
             print 'Number of channels set to {0)'.format(num_channels)
         elif opt == '-o':
             channel_offset = int(arg)
-            print 'GPIO channel offset set to {0)'.format(channel_offset)
+            print 'GPIO channel offset set to {0}'.format(channel_offset)
 
     # Set up fire banks
     fire_bank = GPIOFireBank(num_channels, 3, channel_offset)
