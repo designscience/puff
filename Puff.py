@@ -40,6 +40,28 @@ def parse_and_execute(data, bank):
     return data
 
 
+def execute(cmnd, ver, paramz, bank):
+    """
+    Executes (or ignores) a command passed
+    :param cmnd: the command verb
+    :param ver: the command version (numeric)
+    :param paramz: the command parameters (colon-delimited)
+    :param bank: the GPIOFireBank object
+    :return: True if command executed else false
+    """
+    # TODO: add version handling and more commands
+    if cmnd == 'bnx':
+        terms = paramz.split(':')
+        try:
+            count = int(terms[0])
+            for i in range(0, count):
+                bank.set_channel(i, terms[i + 1])
+        except IndexError:
+            print "Index out of range in execute()"
+        except:
+            print "Unknown exception"
+        bank.execute()
+
 def main(argv):
     """
     Initializes and runs the Puff program
