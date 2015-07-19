@@ -30,14 +30,14 @@ def parse_and_execute(data, bank):
                 version = message.group(2)
                 params = message.group(3)
                 data = data[message.end(0):]
-                print "Message end: {0} Command: {1}, params: {2}, data now {3}".format(message.end(0), command, params, data)
+                # print "Message end: {0} Command: {1}, params: {2}, data now {3}".format(message.end(0), command, params, data)
                 execute(command, version, params, bank)
             else:
                 data = ""
                 break
     except KeyboardInterrupt:
         raise
-    print "Returning data: {0}".format(data)
+    # print "Returning data: {0}".format(data)
     return data
 
 
@@ -59,8 +59,6 @@ def execute(cmnd, ver, paramz, bank):
                 bank.set_channel_state(i, int(terms[i]))
         except IndexError:
             print "Index out of range in execute()"
-        # except:
-        #     print "Unknown exception"
 
 
 def main(argv):
