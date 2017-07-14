@@ -73,7 +73,7 @@ def main(argv):
     addr = (host, port)
     local_addr = gethostbyname(gethostname())
     running = True  # keep running until this is set false
-    num_channels = 18
+    num_channels = 20
     channel_offset = 2  # channel_offset
     mssg = ""
 
@@ -118,13 +118,12 @@ def main(argv):
     if mode == 'test':
         running = True
         while running:
-            # for i in range(0, num_channels):
-            for i in range(16, num_channels):
+            for i in range(0, num_channels):
                 try:
                     fire_bank.kill()
                     fire_bank.set_channel_state(i, True)
                     print('Channel {0}'.format(i))
-                    sleep(0.3)
+                    sleep(0.2)
                 except (KeyboardInterrupt, SystemExit):
                     running = False
                     fire_bank.kill()
