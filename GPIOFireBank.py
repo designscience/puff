@@ -105,6 +105,7 @@ class GPIOFireBank:
             GPIO.setwarnings(False)
             for ch in range(0, num_channels):
                 GPIO.setup(ch + self.channel_offset, GPIO.OUT)
+                print('Setting up channel {0}...'.format(ch))
 
         self.num_channels = 0
         self.max_on_time = max_on_time
