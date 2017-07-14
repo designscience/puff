@@ -118,7 +118,8 @@ def main(argv):
     if mode == 'test':
         running = True
         while running:
-            for i in range(0, num_channels):
+            # for i in range(0, num_channels):
+            for i in range(0, 2):
                 try:
                     fire_bank.kill()
                     fire_bank.set_channel_state(i, True)
