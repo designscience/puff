@@ -118,7 +118,7 @@ def main(argv):
     if mode == 'test':
         running = True
         while running:
-            for i in range(1, num_channels + 1):
+            for i in range(0, num_channels):
                 try:
                     fire_bank.kill()
                     fire_bank.set_channel_state(i, True)
@@ -126,7 +126,10 @@ def main(argv):
                     sleep(0.3)
                 except (KeyboardInterrupt, SystemExit):
                     running = False
-                    break
+                    fire_bank.kill()
+                except IndexError:
+                    running = False
+                    fire_bank.kill()
     else:
         # Open socket
         ss = socket(AF_INET, SOCK_STREAM)
