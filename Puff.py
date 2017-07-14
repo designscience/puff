@@ -6,7 +6,7 @@ from time import sleep
 from NaggingMother import NaggingMother
 import threading
 from Queue import Queue
-from re import search
+# from re import search
 import sys
 import getopt
 import re
@@ -30,7 +30,8 @@ def parse_and_execute(data, bank):
                 version = message.group(2)
                 params = message.group(3)
                 data = data[message.end(0):]
-                # print "Message end: {0} Command: {1}, params: {2}, data now {3}".format(message.end(0), command, params, data)
+                print("Message end: {0} command: {1}, params: {2}, data now {3}"
+                      .format(message.end(0), command, params, data))
                 execute(command, version, params, bank)
             else:
                 data = ""
@@ -71,34 +72,39 @@ def main(argv):
     bufsize = 1024
     addr = (host, port)
     local_addr = gethostbyname(gethostname())
-    running = True # keep running until this is set false
+    running = True  # keep running until this is set false
     num_channels = 18
     channel_offset = 2  # channel_offset
     mssg = ""
 
     test_toggle = False
 
+    # Get mode from command line
+    mode = 'normal'
+    if len(sys.argv) > 1:
+        mode = sys.argv[1]
+
     # process command line arguments
     try:
         opts, args = getopt.getopt(argv, 'a:p:c:o:')
     except getopt.GetoptError:
-        print 'Usage puff -a 192.168.1.144 -p 4444 -c 24'
+        print('Usage puff -a 192.168.1.144 -p 4444 -c 24')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-a':
             host = arg
             local_addr = arg
-            print 'Using host address {0}'.format(host)
+            print('Using host address {0}'.format(host))
         elif opt == '-p':
             port = int(arg)
-            print 'Using host port {0}'.format(port)
+            print('Using host port {0}'.format(port))
         elif opt == '-c':
             num_channels = int(arg)
-            print 'Number of channels set to {0}'.format(num_channels)
+            print('Number of channels set to {0}'.format(num_channels))
         elif opt == '-o':
             channel_offset = int(arg)
-            print 'GPIO channel offset set to {0}'.format(channel_offset)
+            print('GPIO channel offset set to {0}'.format(channel_offset))
 
     # Set up fire banks
     fire_bank = GPIOFireBank(num_channels, 3, channel_offset)
@@ -109,41 +115,54 @@ def main(argv):
     watchdog = threading.Thread(target=mom, args=(fire_bank, call_your_mother))
     watchdog.start()
 
-    # Open socket
-    ss = socket(AF_INET, SOCK_STREAM)
-    try:
-        ss.bind(addr)
-    except error:
-        print "Unable to bind to socket. Closing."
-        running = False
-    while running:
-        ss.listen(1)
-        print "Listening on host {0}, port {1}".format(local_addr, port)
+    if mode == 'test':
+        running = True
+        while running:
+            for i in range(1, num_channels + 1):
+                try:
+                    fire_bank.kill()
+                    fire_bank.set_channel_state(i, True)
+                    print('Channel {0}'.format(i))
+                    sleep(0.3)
+                except (KeyboardInterrupt, SystemExit):
+                    running = False
+                    break
+    else:
+        # Open socket
+        ss = socket(AF_INET, SOCK_STREAM)
         try:
-            cs, addr = ss.accept()  # blocking
-        except (KeyboardInterrupt, SystemExit):
-            break
-        print 'Connected from client at addr'
-        while True:
+            ss.bind(addr)
+        except error:
+            print "Unable to bind to socket. Closing."
+            running = False
+        while running:
+            ss.listen(1)
+            print "Listening on host {0}, port {1}".format(local_addr, port)
             try:
-                mssg += cs.recv(bufsize)
-            except error:
-                print "Lost connection to host process. Waiting for new connection..."
-                fire_bank.kill()
-                break
+                cs, addr = ss.accept()  # blocking
             except (KeyboardInterrupt, SystemExit):
-                running = False
                 break
-            if not mssg:
-                print "Null data received."
-                fire_bank.kill()
-                break
-            else:
-                # print "Message: {0}".format(mssg)
-                mssg = parse_and_execute(mssg, fire_bank)
+            print 'Connected from client at addr'
+            while True:
+                try:
+                    mssg += cs.recv(bufsize)
+                except error:
+                    print "Lost connection to host process. Waiting for new connection..."
+                    fire_bank.kill()
+                    break
+                except (KeyboardInterrupt, SystemExit):
+                    running = False
+                    break
+                if not mssg:
+                    print "Null data received."
+                    fire_bank.kill()
+                    break
+                else:
+                    # print "Message: {0}".format(mssg)
+                    mssg = parse_and_execute(mssg, fire_bank)
 
-        cs.close()
-    ss.close()
+            cs.close()
+        ss.close()
 
     # shut down the watchdog thread
     call_your_mother.put('exit')
