@@ -130,6 +130,7 @@ def main(argv):
                 except IndexError:
                     running = False
                     fire_bank.kill()
+            sleep(1)
     else:
         # Open socket
         ss = socket(AF_INET, SOCK_STREAM)

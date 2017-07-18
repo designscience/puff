@@ -5,3 +5,5 @@ gitignore.txt
 *.lnk
 unused/
 disc_image/
+ENV
+ENV2
