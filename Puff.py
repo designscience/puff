@@ -165,6 +165,7 @@ def main(argv):
                     fire_bank.kill()
                     break
                 except (KeyboardInterrupt, SystemExit):
+                    fire_bank.kill()
                     running = False
                     break
                 if not mssg:
@@ -176,7 +177,6 @@ def main(argv):
                     mssg = parse_and_execute(mssg, fire_bank, verbose)
 
             cs.close()
-        ss.shutdown()
         ss.close()
 
     # shut down the watchdog thread
