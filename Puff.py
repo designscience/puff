@@ -82,6 +82,7 @@ def main(argv):
     num_channels = 18
     channel_offset = 2  # channel_offset
     mssg = ""
+    mode = 'normal'
     verbose = False
 
     test_toggle = False
