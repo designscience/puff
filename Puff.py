@@ -86,16 +86,12 @@ def main(argv):
 
     test_toggle = False
 
-    # Get mode from command line
-    mode = 'normal'
-    if len(sys.argv) > 1:
-        mode = sys.argv[1]
-
     # process command line arguments
     try:
-        opts, args = getopt.getopt(argv, 'a:p:c:o:')
+        opts, args = getopt.getopt(argv, 'a:p:c:o:v:t')
     except getopt.GetoptError:
         print('Usage puff -a 192.168.1.144 -p 4444 -c 24')
+        print('a: address, p: port, c: num channels, o: GPIO channel offset, v: verbose, t: test mode')
         sys.exit(2)
 
     for opt, arg in opts:
@@ -115,6 +111,9 @@ def main(argv):
         elif opt == '-v':
             verbose = True
             print('Verbose mode enabled')
+        elif opt == '-t':
+            mode = 'test'
+            print('Test mode enabled')
 
     # Set up fire banks
     fire_bank = GPIOFireBank(num_channels, 3, channel_offset)
