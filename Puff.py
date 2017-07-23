@@ -62,9 +62,10 @@ def execute(cmnd, ver, paramz, bank):
             print("Index out of range in execute() for bnx")
     elif cmnd == 'chx':
         try:
-            bank.set_channel_state(terms[0], terms[1])
+            bank.set_channel_state(int(terms[0]), int(terms[1]))
         except IndexError:
             print("Index out of range in execute() for chx")
+
 
 def main(argv):
     """
