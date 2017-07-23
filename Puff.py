@@ -89,7 +89,7 @@ def main(argv):
 
     # process command line arguments
     try:
-        opts, args = getopt.getopt(argv, 'a:p:c:o:v:t')
+        opts, args = getopt.getopt(argv, 'a:p:c:o:v:t:test:verbose:')
     except getopt.GetoptError:
         print('Usage puff -a 192.168.1.144 -p 4444 -c 24')
         print('a: address, p: port, c: num channels, o: GPIO channel offset, v: verbose, t: test mode')
@@ -109,10 +109,10 @@ def main(argv):
         elif opt == '-o':
             channel_offset = int(arg)
             print('GPIO channel offset set to {0}'.format(channel_offset))
-        elif opt == '-v':
+        elif opt == '-v' or opt == 'verbose':
             verbose = True
             print('Verbose mode enabled')
-        elif opt == '-t':
+        elif opt == '-t' or opt == 'test':
             mode = 'test'
             print('Test mode enabled')
 
