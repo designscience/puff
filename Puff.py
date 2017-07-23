@@ -14,7 +14,7 @@ import re
 __author__ = 'Stu D\'Alessandro'
 
 
-def parse_and_execute(data, bank):
+def parse_and_execute(data, bank, verbose=False):
     """
     Parses and executes commands from a data string
     :param data: command data from stream - may include more than one command or partial commands
@@ -30,8 +30,9 @@ def parse_and_execute(data, bank):
                 version = message.group(2)
                 params = message.group(3)
                 data = data[message.end(0):]
-                print("Message end: {0} command: {1}, params: {2}, data now {3}"
-                      .format(message.end(0), command, params, data))
+                if verbose:
+                    print("Message end: {0} command: {1}, params: {2}, data now {3}"
+                          .format(message.end(0), command, params, data))
                 execute(command, version, params, bank)
             else:
                 data = ""
@@ -81,6 +82,7 @@ def main(argv):
     num_channels = 18
     channel_offset = 2  # channel_offset
     mssg = ""
+    verbose = False
 
     test_toggle = False
 
@@ -110,6 +112,9 @@ def main(argv):
         elif opt == '-o':
             channel_offset = int(arg)
             print('GPIO channel offset set to {0}'.format(channel_offset))
+        elif opt == '-v':
+            verbose = True
+            print('Verbose mode enabled')
 
     # Set up fire banks
     fire_bank = GPIOFireBank(num_channels, 3, channel_offset)
@@ -168,7 +173,7 @@ def main(argv):
                     break
                 else:
                     # print "Message: {0}".format(mssg)
-                    mssg = parse_and_execute(mssg, fire_bank)
+                    mssg = parse_and_execute(mssg, fire_bank, verbose)
 
             cs.close()
         ss.shutdown()
