@@ -63,7 +63,7 @@ def execute(cmnd, ver, paramz, bank):
             print("Index out of range in execute() for bnx - index: {}".format(i))
     elif cmnd == 'chx':
         try:
-            bank.set_channel_state(int(terms[0]), int(terms[1]))
+            bank.set_channel_state(int(terms[0] - 1), int(terms[1]))
         except IndexError:
             print("Index out of range in execute() for chx - channel: {}, state: {}".format(terms[0], terms[1]))
 
@@ -80,7 +80,7 @@ def main(argv):
     local_addr = gethostbyname(gethostname())
     running = True  # keep running until this is set false
     num_channels = 18
-    channel_offset = 2  # channel_offset
+    channel_offset = 1  # channel_offset
     mssg = ""
     mode = 'normal'
     verbose = False
@@ -89,10 +89,11 @@ def main(argv):
 
     # process command line arguments
     try:
-        opts, args = getopt.getopt(argv, 'a:p:c:o:v:t:test:verbose:')
+        opts, args = getopt.getopt(argv, 'a:p:c:o:v:t:')
     except getopt.GetoptError:
-        print('Usage puff -a 192.168.1.144 -p 4444 -c 24')
+        print('Usage puff -a 192.168.1.144 -p 4444 -c 24 -v 1')
         print('a: address, p: port, c: num channels, o: GPIO channel offset, v: verbose, t: test mode')
+        print('All arguments must be followed by a value (e.g. -t 1')
         sys.exit(2)
 
     for opt, arg in opts:
