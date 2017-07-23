@@ -80,7 +80,7 @@ def main(argv):
     local_addr = gethostbyname(gethostname())
     running = True  # keep running until this is set false
     num_channels = 18
-    channel_offset = 1  # channel_offset
+    channel_offset = 2  # channel_offset
     mssg = ""
     mode = 'normal'
     verbose = False
