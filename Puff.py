@@ -176,6 +176,7 @@ def main(argv):
                     mssg = parse_and_execute(mssg, fire_bank, verbose)
 
             cs.close()
+        ss.shutdown()
         ss.close()
 
     # shut down the watchdog thread
