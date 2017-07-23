@@ -52,15 +52,19 @@ def execute(cmnd, ver, paramz, bank):
     :return: True if command executed else false
     """
     # TODO: add version handling and more commands
+    terms = paramz.split(':')
     if cmnd == 'bnx':
-        terms = paramz.split(':')
         try:
             count = int(terms[0])
             for i in range(1, count):
                 bank.set_channel_state(i, int(terms[i]))
         except IndexError:
-            print "Index out of range in execute()"
-
+            print("Index out of range in execute() for bnx")
+    elif cmnd == 'chx':
+        try:
+            bank.set_channel_state(terms[0], terms[1])
+        except IndexError:
+            print("Index out of range in execute() for chx")
 
 def main(argv):
     """
@@ -73,7 +77,7 @@ def main(argv):
     addr = (host, port)
     local_addr = gethostbyname(gethostname())
     running = True  # keep running until this is set false
-    num_channels = 20
+    num_channels = 18
     channel_offset = 2  # channel_offset
     mssg = ""
 
@@ -137,28 +141,28 @@ def main(argv):
         try:
             ss.bind(addr)
         except error:
-            print "Unable to bind to socket. Closing."
+            print("Unable to bind to socket. Closing.")
             running = False
         while running:
             ss.listen(1)
-            print "Listening on host {0}, port {1}".format(local_addr, port)
+            print("Listening on host {0}, port {1}".format(local_addr, port))
             try:
                 cs, addr = ss.accept()  # blocking
             except (KeyboardInterrupt, SystemExit):
                 break
-            print 'Connected from client at addr'
+            print('Connected from client at addr')
             while True:
                 try:
                     mssg += cs.recv(bufsize)
                 except error:
-                    print "Lost connection to host process. Waiting for new connection..."
+                    print("Lost connection to host process. Waiting for new connection...")
                     fire_bank.kill()
                     break
                 except (KeyboardInterrupt, SystemExit):
                     running = False
                     break
                 if not mssg:
-                    print "Null data received."
+                    print("Null data received.")
                     fire_bank.kill()
                     break
                 else:
@@ -170,7 +174,7 @@ def main(argv):
 
     # shut down the watchdog thread
     call_your_mother.put('exit')
-    print "Shutting down..."
+    print("Shutting down...")
     watchdog.join()
     return 0
 
